@@ -16,7 +16,7 @@
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font:16px/1.6 "PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;overflow:hidden}
 #stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 30%,#eef3f6,#cfdbe4 70%,#b9c9d6)}
-#actor{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 44px);height:70vh;height:70dvh;display:grid;justify-items:center}
+#actor{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 44px);height:70vh;height:70dvh;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center}
 .pose{grid-area:1/1;height:100%;width:auto;max-width:none;opacity:0;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent);transform-origin:50% 0;animation:breathe 4.5s ease-in-out infinite;transition:opacity .35s,translate .5s,filter .5s}
 .pose.on{opacity:1}
 #actor.shy .pose{translate:0 5px}
@@ -53,14 +53,30 @@ button{border:0;border-radius:18px;padding:0 18px;background:#4a6486;color:#f2f6
 #box label{font-size:14px}
 #box small{font-size:12.5px;opacity:.8;line-height:1.5}
 #box button{height:42px;margin-top:4px}
+#scrim{position:fixed;inset:0;z-index:30;background:rgba(44,64,82,.4);opacity:0;pointer-events:none;transition:opacity .25s}
+#drawer{position:fixed;top:0;bottom:0;left:0;z-index:31;width:min(76vw,290px);padding:calc(16px + env(safe-area-inset-top,0px)) 14px 16px;background:rgba(244,247,249,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:0 22px 22px 0;transform:translateX(-105%);transition:transform .28s;display:flex;flex-direction:column;gap:6px}
+body.menu #drawer{transform:none}
+body.menu #scrim{opacity:1;pointer-events:auto}
+#drawer h2{font-size:15px;font-weight:600;padding:4px 6px 8px}
+.who{display:flex;align-items:center;gap:12px;padding:8px 8px;border-radius:14px;background:none;color:var(--ink);text-align:left;height:auto;width:100%}
+.who.on{background:rgba(167,191,208,.55)}
+.who[disabled]{opacity:.5;cursor:default}
+.av{flex:none;width:46px;height:46px;border-radius:50%;background:#cfdbe4;overflow:hidden;display:grid;place-items:center;font-weight:600}
+.av img{width:100%;height:100%;object-fit:cover;object-position:50% 6%;transform:scale(2.2);transform-origin:50% 14%}
+.who b{display:block;font-size:16px;line-height:1.3}.who small{font-size:12.5px;opacity:.75}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div id="stage"><div id="actor"><img class="pose on" data-p="idle" src="sei-idle.jpg" alt="Sei"><img class="pose" data-p="shy" src="sei-shy.jpg" alt=""><img class="pose" data-p="shock" src="sei-shock.jpg" alt=""><img class="pose" data-p="angry" src="sei-angry.jpg" alt=""></div></div>
-<header><b>Sei</b><div><span id="clock"></span><button id="hist">记录</button><button id="cfg" aria-label="设置">⚙</button></div></header>
+<header><div><button id="menu" aria-label="角色菜单">☰</button><b>Sei</b></div><div><span id="clock"></span><button id="hist">记录</button><button id="cfg" aria-label="设置">⚙</button></div></header>
 <div id="log"></div>
 <div id="ui"><div id="dlg"><small>Sei</small><span id="dt"></span></div><footer><textarea id="inp" rows="1" placeholder="和 Sei 说点什么……"></textarea><button id="go">发送</button></footer></div>
+<div id="scrim"></div>
+<nav id="drawer" aria-label="角色"><h2>角色</h2>
+<button class="who on" id="w-sei"><span class="av"><img src="sei-idle.jpg" alt=""></span><span><b>Sei</b><small>正在聊天</small></span></button>
+<button class="who" disabled><span class="av">D</span><span><b>德拉科·马尔福</b><small>即将加入</small></span></button>
+</nav>
 <div id="panel"><div id="box">
 <label>Sei 怎么称呼你<input id="uname" placeholder="例如：小鸟"></label>
 <label>DeepSeek API Key<input id="ukey" type="password" placeholder="sk-……" autocomplete="off"></label>
@@ -103,6 +119,7 @@ const POSE={shy:'shy',awkward:'shy',shock:'shock',sulk:'angry'};let mt;
 function pose(p){document.querySelectorAll('.pose').forEach(i=>i.classList.toggle('on',i.dataset.p===p))}
 function mood(e){clearTimeout(mt);const c=MAP[e]||'calm';actor.className='';void actor.offsetWidth;actor.classList.add(c);pose(POSE[c]||'idle');if(c!=='calm')mt=setTimeout(()=>{actor.className='';pose('idle')},3200)}
 const dt=$('#dt'),setDlg=t=>{dt.textContent=t;$('#dlg').scrollTop=0};
+const menu=o=>document.body.classList.toggle('menu',o);$('#menu').onclick=()=>menu(true);$('#scrim').onclick=()=>menu(false);$('#w-sei').onclick=()=>menu(false);
 $('#hist').onclick=()=>{document.body.classList.toggle('hist');log.scrollTop=log.scrollHeight};
 $('#dlg').onclick=()=>{document.body.classList.add('hist');log.scrollTop=log.scrollHeight};
 const split=t=>{const m=t.match(/^\[(.{1,4}?)\]\s*/);return m?[m[1],t.slice(m[0].length)]:[null,t]};
