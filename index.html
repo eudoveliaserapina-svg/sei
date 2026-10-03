@@ -66,14 +66,14 @@ button{border:0;border-radius:18px;padding:0 18px;background:var(--ac);color:#f2
 #mi{height:110px;width:100%;margin-bottom:10px;border-radius:16px;padding:12px;resize:none}
 .nt{background:var(--sei);border-radius:14px;padding:10px 14px;margin-top:10px}
 .nt p{white-space:pre-wrap;overflow-wrap:anywhere}.nt small{opacity:.6}.nt button{height:26px;padding:0 10px;margin-left:10px;font-size:13px;background:rgba(0,0,0,.08);color:var(--ink)}
-#mline{min-height:44px}audio{width:100%}
+.dl{display:block;font-size:14px;margin-bottom:10px}#mline{min-height:44px}audio{width:100%}
 .hc{margin:18px 0 16px}.hc small{letter-spacing:.2em;opacity:.7}.hc b{display:block;font-size:64px;line-height:1.1;font-weight:500;font-variant-numeric:tabular-nums}.hc span{opacity:.75}
 .card{display:flex;gap:14px;align-items:center;padding:14px;background:var(--sei);border-radius:22px;margin-bottom:22px}
 .av{width:54px;height:54px;border-radius:16px;overflow:hidden;flex:none;background:#cfdbe4}.av img{width:100%;height:100%;object-fit:cover;transform:scale(2.2);transform-origin:50% 12%}
 .card i{font-style:normal;font-size:11px;letter-spacing:.14em;background:var(--me);border-radius:10px;padding:1px 8px;margin-left:6px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 8px}
 .ic{height:auto;background:none;color:var(--ink);padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;position:relative}
-.ic span{width:60px;height:60px;border-radius:20px;background:var(--sei);display:grid;place-items:center;font-size:26px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.row{display:flex;gap:8px;flex-wrap:wrap}.itm{height:auto;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.7);color:var(--ink);font-size:14px}.itm.on{background:var(--ac);color:#fff}.itm:disabled{opacity:.5}.ic span{width:60px;height:60px;border-radius:20px;background:var(--sei);display:grid;place-items:center;font-size:26px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 #dot{position:absolute;top:-2px;right:12px;width:12px;height:12px;border-radius:50%;background:#e0707a}#dot[hidden]{display:none}
 .sw{display:flex;gap:10px}.sw button{flex:1;height:48px;border-radius:14px}
 #boot{position:fixed;inset:0;z-index:100;background:#0d1117;color:#8fe3c4;font:13px/1.9 ui-monospace,Menlo,monospace;padding:calc(60px + env(safe-area-inset-top,0px)) 24px;transition:opacity .5s}
@@ -94,10 +94,12 @@ button{border:0;border-radius:18px;padding:0 18px;background:var(--ac);color:#f2
 <div id="ui"><div id="dlg"><small>Sei</small><span id="dt"></span></div><footer><textarea id="inp" rows="1" placeholder="和 Sei 说点什么……"></textarea><button id="go">发送</button></footer></div>
 <section class="view on" id="v-home"><div class="hc"><small id="hgreet"></small><b id="hclock"></b><span id="hdate"></span></div>
 <div class="card"><span class="av"><img src="sei-idle.jpg" alt=""></span><div><b>Sei</b><i>ONLINE</i><br><small>想和你说说话……</small></div></div>
-<div class="grid"><button class="ic" data-open=""><span>✉</span>聊天<em id="dot" hidden></em></button><button class="ic" data-open="v-memo"><span>✎</span>备忘录</button><button class="ic" data-open="v-music"><span>♪</span>一起听歌</button><button class="ic" data-open="v-theme"><span>◐</span>外观</button><button class="ic" id="ic-set"><span>⚙</span>设置</button></div></section>
-<section class="view" id="v-memo"><div class="bar"><button data-open="v-home">‹</button><b>备忘录</b><span></span></div><textarea id="mi" placeholder="写点什么……"></textarea><button class="wide" id="ma">保存</button><div id="ml"></div></section>
-<section class="view sheet" id="v-music"><div class="sh"><div class="bar" style="margin:0"><button data-open="v-home">‹</button><b>一起听歌</b><button data-open="">收起</button></div><p id="mline">选一首歌，我们一起听。</p><p id="mname"></p><label class="wide">选择音乐文件<input id="mf" type="file" accept="audio/*" hidden></label><audio id="au" controls playsinline></audio></div></section>
+<div class="grid"><button class="ic" data-open=""><span><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>见面<em id="dot" hidden></em></button><button class="ic" data-open="v-memo"><span><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M9 11h6M9 15h4"/></svg></span>备忘录</button><button class="ic" data-open="v-music"><span><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg></span>一起听歌</button><button class="ic" data-open="v-shop"><span><svg viewBox="0 0 24 24"><path d="M3 4h2l2.2 10h10.5l2-7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>购物</button><button class="ic" data-open="v-phone" id="ic-ph"><span><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></svg></span>查手机</button><button class="ic" data-open="v-theme"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v16"/></svg></span>外观</button><button class="ic" id="ic-set"><span><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="2"/><circle cx="15" cy="16" r="2"/><path d="M5 8h2M11 8h8M5 16h8M17 16h2"/></svg></span>设置</button></div></section>
+<section class="view" id="v-memo"><div class="bar"><button data-open="v-home">‹</button><b>备忘录</b><span></span></div><textarea id="mi" placeholder="写点什么……"></textarea><label class="dl">提醒时间（可选）<input id="md" type="datetime-local"></label><button class="wide" id="ma">保存</button><div id="ml"></div></section>
+<section class="view sheet" id="v-music"><div class="sh"><div class="bar" style="margin:0"><button data-open="v-home">‹</button><b>一起听歌</b><button data-open="">收起</button></div><p id="mline" class="sl">选一首歌，我们一起听。</p><p id="mname"></p><div style="display:flex;gap:8px"><input id="ms" placeholder="在别的软件听歌？写下歌名"><button id="mb">告诉 Sei</button></div><label class="wide">选择音乐文件<input id="mf" type="file" accept="audio/*" hidden></label><audio id="au" controls playsinline></audio></div></section>
 <section class="view" id="v-theme"><div class="bar"><button data-open="v-home">‹</button><b>外观</b><span></span></div><div class="sw"><button data-t="">雾蓝</button><button data-t="warm">暖米</button><button data-t="lav">薰衣草</button></div></section>
+<section class="view sheet" id="v-shop"><div class="sh"><div class="bar" style="margin:0"><button data-open="v-home">‹</button><b>购物</b><button data-open="">收起</button></div><p class="sl" style="min-height:24px"></p><b>衣服</b><div class="row" id="so"></div><b>发型</b><div class="row" id="shh"></div></div></section>
+<section class="view" id="v-phone"><div class="bar"><button data-open="v-home">‹</button><b>Sei 的手机</b><span></span></div><div id="pc"><p>点开就能看到他的手机。</p></div><button class="wide" id="pg" style="margin-top:14px">重新生成</button></section>
 <div id="boot"><h1>SEI-OS</h1><div id="bl"></div><div id="bar"><i></i></div><small>点按屏幕跳过</small></div>
 <div id="panel"><div id="box">
 <label>Sei 怎么称呼你<input id="uname" placeholder="例如：小鸟"></label>
@@ -142,7 +144,7 @@ function add(role,text){const d=document.createElement('div');d.className='m '+r
 const POSE={shy:'shy',awkward:'shy',shock:'shock',sulk:'angry'};let mt,lis=false;
 function pose(p){document.querySelectorAll('.pose').forEach(i=>i.classList.toggle('on',i.dataset.p===p))}
 function mood(e){clearTimeout(mt);const c=MAP[e]||'calm';actor.className='';void actor.offsetWidth;actor.classList.add(c);pose(POSE[c]||'idle');if(c!=='calm')mt=setTimeout(()=>{actor.className='';pose(lis?'angry':'idle')},3200)}
-const dt=$('#dt'),setDlg=t=>{dt.textContent=t;$('#mline').textContent=t;$('#dlg').scrollTop=0};
+const dt=$('#dt'),setDlg=t=>{dt.textContent=t;document.querySelectorAll('.sl').forEach(e=>e.textContent=t);$('#dlg').scrollTop=0};
 const open=id=>document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));$('#menu').onclick=()=>open('v-home');
 document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b){open(b.dataset.open);if(!b.dataset.open)$('#dot').hidden=true}});
 $('#hist').onclick=()=>{document.body.classList.toggle('hist');log.scrollTop=log.scrollHeight};
@@ -152,8 +154,9 @@ async function ask(hint){
   const key=ls('solo_key');
   if(!key){panel.classList.add('on');return}
   busy=true;const bub=add('sei','……');
+  const memoTxt=()=>{let a=[];try{a=JSON.parse(ls('solo_memo')||'[]')}catch(e){}a=a.slice(0,12).map(m=>'- '+m.t.slice(0,80)+(m.due?'（提醒时间 '+m.due.replace('T',' ')+(m.done?'，已提醒过':'')+'）':'')).join('\n');return a?'\n她的备忘录（你能读到；相关时自然地提醒她，别每次都提）：\n'+a:''};
   const dayTxt=()=>{const x=day();return x.s||x.n?'\n对方今天的状态：'+(x.s||'')+' '+(x.n||'')+'（自然地关心，不要刻板重复）':''};
-  const sys=PERSONA.replaceAll('{name}',name())+'\n当前时间：'+nowStr()+dayTxt()+(hint?'\n本次情境：'+hint:'');
+  const sys=PERSONA.replaceAll('{name}',name())+'\n当前时间：'+nowStr()+dayTxt()+memoTxt()+(hint?'\n本次情境：'+hint:'');
   let msgs=hist.slice(-30);
   if(!msgs.length||msgs[msgs.length-1].role==='assistant')msgs=msgs.concat({role:'user',content:'（'+name()+'打开了应用）'});
   try{
@@ -194,8 +197,8 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(
 
 let lastAct=Date.now(),lastPro=0;$('#ic-set').onclick=()=>{open('');openCfg()};
 let memo=[];try{memo=JSON.parse(ls('solo_memo')||'[]')}catch(e){}
-const mr=()=>{$('#ml').innerHTML='';memo.forEach((m,i)=>{const d=document.createElement('div');d.className='nt';d.innerHTML='<p></p><small></small><button>删除</button>';d.children[0].textContent=m.t;d.children[1].textContent=m.at;d.children[2].onclick=()=>{memo.splice(i,1);ss('solo_memo',JSON.stringify(memo));mr()};$('#ml').appendChild(d)})};
-$('#ma').onclick=()=>{const t=$('#mi').value.trim();if(!t)return;memo.unshift({t,at:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});ss('solo_memo',JSON.stringify(memo));$('#mi').value='';mr()};mr();
+const mr=()=>{$('#ml').innerHTML='';memo.forEach((m,i)=>{const d=document.createElement('div');d.className='nt';d.innerHTML='<p></p><small></small><button>删除</button>';d.children[0].textContent=m.t;d.children[1].textContent=m.at+(m.due?' · 提醒 '+m.due.replace('T',' ')+(m.done?'（已提醒）':''):'');d.children[2].onclick=()=>{memo.splice(i,1);ss('solo_memo',JSON.stringify(memo));mr()};$('#ml').appendChild(d)})};
+$('#ma').onclick=()=>{const t=$('#mi').value.trim();if(!t)return;memo.unshift({t,due:$('#md').value,done:false,at:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});ss('solo_memo',JSON.stringify(memo));$('#mi').value='';$('#md').value='';mr()};mr();
 const au=$('#au');let mn='',ann='';
 $('#mf').onchange=e=>{const f=e.target.files[0];if(!f)return;au.src=URL.createObjectURL(f);mn=f.name.replace(/\.[^.]+$/,'');$('#mname').textContent='♪ '+mn;au.play().catch(()=>{})};
 au.onplay=()=>{lis=true;pose('angry');if(mn&&ann!==mn){ann=mn;ask('你们正在一起听歌，正在播放《'+mn+'》。用一两句话自然回应，可以轻轻哼歌。')}};
@@ -205,6 +208,28 @@ setInterval(()=>{if(document.hidden||busy||!ls('solo_key')||!hist.length)return;
 const setTheme=t=>{if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme;ss('solo_theme',t)};setTheme(ls('solo_theme')||'');document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
 const B=$('#boot'),L=$('#bl');['BOOT SEQUENCE 0.1','CPU ............ OK','MEMORY ......... OK','CLOCK SYNC ..... '+new Date().toLocaleTimeString('zh-CN',{hour12:false}),'LINK: SEI ...... ONLINE'].forEach((t,i)=>setTimeout(()=>{L.textContent+=t+'\n'},300+i*850));
 const endBoot=()=>{B.classList.add('off');setTimeout(()=>B.remove(),600)};setTimeout(endBoot,4800);B.onclick=endBoot;
+
+const hear=n=>{n=(n||'').trim();if(!n)return;mn=n;$('#mname').textContent='♪ '+n;lis=true;pose('angry');ask('你们正在一起听歌（她在别的软件播放），歌曲是《'+n+'》。用一两句话自然回应，可以轻轻哼歌。');setTimeout(()=>{if(au.paused){lis=false;pose('idle')}},6*6e4)};
+$('#mb').onclick=()=>{hear($('#ms').value);$('#ms').value=''};
+const q=new URLSearchParams(location.search).get('song');if(q){history.replaceState(null,'',location.pathname);open('');setTimeout(()=>hear(q),5200)}
+const due=()=>{const m=memo.find(x=>x.due&&!x.done&&new Date(x.due)<=new Date());if(m&&!busy&&ls('solo_key')){m.done=true;ss('solo_memo',JSON.stringify(memo));mr();ask('备忘录里有一条到提醒时间了：「'+m.t.slice(0,80)+'」。用你的语气轻轻提醒她，不超过两句。')}};
+setInterval(due,3e4);document.addEventListener('visibilitychange',()=>{if(!document.hidden)due()});setTimeout(due,6e3);
+
+const WARD={outfit:[{id:'school',n:'白衬衫校服',img:{idle:'sei-idle.jpg',shy:'sei-shy.jpg',shock:'sei-shock.jpg',angry:'sei-angry.jpg'}},{id:'vest',n:'红色针织背心',img:{idle:'sei-vest-idle.jpg'}}],hair:[{id:'brown',n:'棕色短发'},{id:'silver',n:'银白短发',soon:1}]};
+let wear={outfit:ls('solo_outfit')||'school',hair:ls('solo_hair')||'brown'};
+const applyWear=()=>{const o=WARD.outfit.find(x=>x.id===wear.outfit)||WARD.outfit[0];document.querySelectorAll('.pose').forEach(i=>{const u=o.img[i.dataset.p]||o.img.idle;if(!i.src.endsWith(u))i.src=u})};
+const rs=()=>{[['outfit','#so'],['hair','#shh']].forEach(([k,sel])=>{const box=$(sel);box.innerHTML='';WARD[k].forEach(x=>{const b=document.createElement('button');b.className='itm'+(wear[k]===x.id?' on':'');b.textContent=x.n+(x.soon?'（素材准备中）':'');b.disabled=!!x.soon;b.onclick=()=>{wear[k]=x.id;ss('solo_'+k,x.id);applyWear();rs();if(k==='outfit'&&ls('solo_key'))ask('她刚给你换上了「'+x.n+'」，用一句话害羞或不好意思地回应。')};box.appendChild(b)})})};rs();applyWear();
+const pr=d=>{const c=$('#pc');c.innerHTML='';[['备忘录',d.memo],['最近搜索',d.search]].forEach(([t,a])=>{const h=document.createElement('div');h.className='nt';h.innerHTML='<small></small><p></p>';h.children[0].textContent=t;h.children[1].textContent=(a||[]).map(x=>'· '+x).join('\n');c.appendChild(h)});const h=document.createElement('div');h.className='nt';h.innerHTML='<small>今日日记</small><p></p>';h.children[1].textContent=d.diary||'';c.appendChild(h)};
+async function pgen(force){const k=ls('solo_key');if(!k){panel.classList.add('on');return}
+let c=null;try{c=JSON.parse(ls('solo_phone'))}catch(e){}
+if(c&&c.d===new Date().toDateString()&&!force){pr(c);return}
+$('#pg').disabled=true;$('#pc').textContent='……';
+try{const ctx=hist.slice(-6).map(m=>(m.role==='user'?name():'Sei')+'：'+m.content).join('\n');
+const r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'deepseek-chat',temperature:1.1,max_tokens:500,messages:[{role:'system',content:PERSONA.replaceAll('{name}',name())},{role:'user',content:'现在请生成你自己手机里的内容，只输出 JSON，不要标签和其他文字：{"memo":["3条备忘录，每条一句话，像Sei会写的，可以与她有关"],"search":["3条最近搜索，温柔日常，例如天气、季节、她喜欢的东西"],"diary":"今日日记，2-3句"}。内容温柔日常，不要成人内容。最近的聊天：\n'+ctx}]})});
+const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||r.status);
+const j=JSON.parse(d.choices[0].message.content.replace(/```json|```/g,'').trim().replace(/^\[.{1,4}\]\s*/,''));j.d=new Date().toDateString();ss('solo_phone',JSON.stringify(j));pr(j)}catch(e){$('#pc').textContent='没能打开：'+e.message}
+$('#pg').disabled=false}
+$('#ic-ph').addEventListener('click',()=>pgen(false));$('#pg').onclick=()=>pgen(true);
 </script>
 </body>
 </html>
