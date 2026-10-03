@@ -11,11 +11,13 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Sei</title>
 <style>
-:root{--bg:#e2e9ee;--top:#55768c;--bot:#8596b4;--ink:#2c4052;--sei:#f4f7f9;--me:#a7bfd0}
+:root{--bg:#e2e9ee;--top:#55768c;--bot:#8596b4;--ink:#2c4052;--sei:#f4f7f9;--me:#a7bfd0;--st:radial-gradient(circle at 50% 30%,#eef3f6,#cfdbe4 70%,#b9c9d6);--ft:rgba(133,150,180,.88);--ac:#4a6486}
+[data-theme=warm]{--bg:#ece8e1;--top:#8a7b6c;--bot:#b9a99a;--ink:#4a4036;--sei:#faf7f2;--me:#d8c9b8;--st:radial-gradient(circle at 50% 30%,#f7f4ee,#e6dfd4 70%,#d6cbbb);--ft:rgba(185,169,154,.9);--ac:#7a6a5a}
+[data-theme=lav]{--bg:#e8e5f0;--top:#7f72a8;--bot:#9d92c0;--ink:#3b3550;--sei:#f6f4fb;--me:#c9c2e0;--st:radial-gradient(circle at 50% 30%,#f3f1f9,#dcd7ec 70%,#c9c2e0);--ft:rgba(157,146,192,.9);--ac:#6a5c9a}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font:16px/1.6 "PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;overflow:hidden}
-#stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 30%,#eef3f6,#cfdbe4 70%,#b9c9d6)}
+#stage{position:fixed;inset:0;overflow:hidden;background:var(--st)}
 #actor{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 44px);height:70vh;height:70dvh;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center}
 .pose{grid-area:1/1;height:100%;width:auto;max-width:none;opacity:0;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent);transform-origin:50% 0;animation:breathe 4.5s ease-in-out infinite;transition:opacity .35s,translate .5s,filter .5s}
 .pose.on{opacity:1}
@@ -42,10 +44,10 @@ body.hist #dlg{display:none}
 .m.sei{background:var(--sei);align-self:flex-start;border-bottom-left-radius:5px}
 .m.me{background:var(--me);align-self:flex-end;border-bottom-right-radius:5px}
 .m.note{align-self:center;font-size:13px;opacity:.8}
-footer{background:rgba(133,150,180,.88);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px}
+footer{background:var(--ft);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px}
 textarea,input{border:0;border-radius:14px;padding:9px 14px;font:inherit;background:#eef2f7;color:var(--ink);width:100%}
 textarea{flex:1;border-radius:18px;resize:none;height:42px;max-height:110px}
-button{border:0;border-radius:18px;padding:0 18px;background:#4a6486;color:#f2f6fb;font:inherit;cursor:pointer}
+button{border:0;border-radius:18px;padding:0 18px;background:var(--ac);color:#f2f6fb;font:inherit;cursor:pointer}
 :focus-visible{outline:2px solid #fff;outline-offset:2px}
 #panel{position:fixed;inset:0;z-index:20;background:rgba(44,64,82,.55);display:none;place-items:center;padding:20px}
 #panel.on{display:grid}
@@ -53,33 +55,55 @@ button{border:0;border-radius:18px;padding:0 18px;background:#4a6486;color:#f2f6
 #box label{font-size:14px}
 #box small{font-size:12.5px;opacity:.8;line-height:1.5}
 #box button{height:42px;margin-top:4px}
-#scrim{position:fixed;inset:0;z-index:30;background:rgba(44,64,82,.4);opacity:0;pointer-events:none;transition:opacity .25s}
-#drawer{position:fixed;top:0;bottom:0;left:0;z-index:31;width:min(76vw,290px);padding:calc(16px + env(safe-area-inset-top,0px)) 14px 16px;background:rgba(244,247,249,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:0 22px 22px 0;transform:translateX(-105%);transition:transform .28s;display:flex;flex-direction:column;gap:6px}
-body.menu #drawer{transform:none}
-body.menu #scrim{opacity:1;pointer-events:auto}
-#drawer h2{font-size:15px;font-weight:600;padding:4px 6px 8px}
-.who{display:flex;align-items:center;gap:12px;padding:8px 8px;border-radius:14px;background:none;color:var(--ink);text-align:left;height:auto;width:100%}
-.who.on{background:rgba(167,191,208,.55)}
-.who[disabled]{opacity:.5;cursor:default}
-.av{flex:none;width:46px;height:46px;border-radius:50%;background:#cfdbe4;overflow:hidden;display:grid;place-items:center;font-weight:600}
-.av img{width:100%;height:100%;object-fit:cover;object-position:50% 6%;transform:scale(2.2);transform-origin:50% 14%}
-.who b{display:block;font-size:16px;line-height:1.3}.who small{font-size:12.5px;opacity:.75}
+.view{position:fixed;inset:0;z-index:10;display:none;overflow-y:auto;background:var(--bg);padding:calc(14px + env(safe-area-inset-top,0px)) 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.view.on{display:block}
+.view.sheet{background:none;pointer-events:none;overflow:hidden}
+.sh{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));pointer-events:auto;background:rgba(244,247,249,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.bar b{font-size:18px;letter-spacing:.06em}
+.bar button{height:34px;background:rgba(255,255,255,.55);color:var(--ink)}
+.wide{height:44px;width:100%;border-radius:16px;display:grid;place-items:center;background:var(--ac);color:#f2f6fb;cursor:pointer}
+#mi{height:110px;width:100%;margin-bottom:10px;border-radius:16px;padding:12px;resize:none}
+.nt{background:var(--sei);border-radius:14px;padding:10px 14px;margin-top:10px}
+.nt p{white-space:pre-wrap;overflow-wrap:anywhere}.nt small{opacity:.6}.nt button{height:26px;padding:0 10px;margin-left:10px;font-size:13px;background:rgba(0,0,0,.08);color:var(--ink)}
+#mline{min-height:44px}audio{width:100%}
+.hc{margin:18px 0 16px}.hc small{letter-spacing:.2em;opacity:.7}.hc b{display:block;font-size:64px;line-height:1.1;font-weight:500;font-variant-numeric:tabular-nums}.hc span{opacity:.75}
+.card{display:flex;gap:14px;align-items:center;padding:14px;background:var(--sei);border-radius:22px;margin-bottom:22px}
+.av{width:54px;height:54px;border-radius:16px;overflow:hidden;flex:none;background:#cfdbe4}.av img{width:100%;height:100%;object-fit:cover;transform:scale(2.2);transform-origin:50% 12%}
+.card i{font-style:normal;font-size:11px;letter-spacing:.14em;background:var(--me);border-radius:10px;padding:1px 8px;margin-left:6px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 8px}
+.ic{height:auto;background:none;color:var(--ink);padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;position:relative}
+.ic span{width:60px;height:60px;border-radius:20px;background:var(--sei);display:grid;place-items:center;font-size:26px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#dot{position:absolute;top:-2px;right:12px;width:12px;height:12px;border-radius:50%;background:#e0707a}#dot[hidden]{display:none}
+.sw{display:flex;gap:10px}.sw button{flex:1;height:48px;border-radius:14px}
+#boot{position:fixed;inset:0;z-index:100;background:#0d1117;color:#8fe3c4;font:13px/1.9 ui-monospace,Menlo,monospace;padding:calc(60px + env(safe-area-inset-top,0px)) 24px;transition:opacity .5s}
+#boot.off{opacity:0;pointer-events:none}
+#boot h1{font-size:28px;letter-spacing:.3em;color:#e6fff7;margin-bottom:18px}
+#bl{white-space:pre-wrap}
+#bar{position:absolute;left:24px;right:24px;bottom:calc(80px + env(safe-area-inset-bottom,0px));height:4px;background:#1f2a33}
+#bar i{display:block;height:100%;background:#8fe3c4;animation:fill 4.4s linear forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+#boot small{position:absolute;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;opacity:.5}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div id="stage"><div id="actor"><img class="pose on" data-p="idle" src="sei-idle.jpg" alt="Sei"><img class="pose" data-p="shy" src="sei-shy.jpg" alt=""><img class="pose" data-p="shock" src="sei-shock.jpg" alt=""><img class="pose" data-p="angry" src="sei-angry.jpg" alt=""></div></div>
-<header><div><button id="menu" aria-label="角色菜单">☰</button><b>Sei</b></div><div><span id="clock"></span><button id="hist">记录</button><button id="cfg" aria-label="设置">⚙</button></div></header>
+<header><div><button id="menu" aria-label="主屏幕">⌂</button><b>Sei</b></div><div><span id="clock"></span><button id="hist">记录</button><button id="cfg" aria-label="设置">⚙</button></div></header>
 <div id="log"></div>
 <div id="ui"><div id="dlg"><small>Sei</small><span id="dt"></span></div><footer><textarea id="inp" rows="1" placeholder="和 Sei 说点什么……"></textarea><button id="go">发送</button></footer></div>
-<div id="scrim"></div>
-<nav id="drawer" aria-label="角色"><h2>角色</h2>
-<button class="who on" id="w-sei"><span class="av"><img src="sei-idle.jpg" alt=""></span><span><b>Sei</b><small>正在聊天</small></span></button>
-<button class="who" disabled><span class="av">D</span><span><b>德拉科·马尔福</b><small>即将加入</small></span></button>
-</nav>
+<section class="view on" id="v-home"><div class="hc"><small id="hgreet"></small><b id="hclock"></b><span id="hdate"></span></div>
+<div class="card"><span class="av"><img src="sei-idle.jpg" alt=""></span><div><b>Sei</b><i>ONLINE</i><br><small>想和你说说话……</small></div></div>
+<div class="grid"><button class="ic" data-open=""><span>✉</span>聊天<em id="dot" hidden></em></button><button class="ic" data-open="v-memo"><span>✎</span>备忘录</button><button class="ic" data-open="v-music"><span>♪</span>一起听歌</button><button class="ic" data-open="v-theme"><span>◐</span>外观</button><button class="ic" id="ic-set"><span>⚙</span>设置</button></div></section>
+<section class="view" id="v-memo"><div class="bar"><button data-open="v-home">‹</button><b>备忘录</b><span></span></div><textarea id="mi" placeholder="写点什么……"></textarea><button class="wide" id="ma">保存</button><div id="ml"></div></section>
+<section class="view sheet" id="v-music"><div class="sh"><div class="bar" style="margin:0"><button data-open="v-home">‹</button><b>一起听歌</b><button data-open="">收起</button></div><p id="mline">选一首歌，我们一起听。</p><p id="mname"></p><label class="wide">选择音乐文件<input id="mf" type="file" accept="audio/*" hidden></label><audio id="au" controls playsinline></audio></div></section>
+<section class="view" id="v-theme"><div class="bar"><button data-open="v-home">‹</button><b>外观</b><span></span></div><div class="sw"><button data-t="">雾蓝</button><button data-t="warm">暖米</button><button data-t="lav">薰衣草</button></div></section>
+<div id="boot"><h1>SEI-OS</h1><div id="bl"></div><div id="bar"><i></i></div><small>点按屏幕跳过</small></div>
 <div id="panel"><div id="box">
 <label>Sei 怎么称呼你<input id="uname" placeholder="例如：小鸟"></label>
 <label>DeepSeek API Key<input id="ukey" type="password" placeholder="sk-……" autocomplete="off"></label>
+<label>今天的状态<select id="uday"><option value="">普通日子</option><option>放假</option><option>调休补班</option><option>请假/休息</option></select></label><label>补充一句<input id="unote" placeholder="例如：国庆假期，今天在家"></label>
+<small>只对今天有效，Sei 会据此关心你。</small>
 <small>Key 只保存在这台设备的浏览器里，不会上传到别处。请不要把它发给任何人。</small>
 <button id="save">保存</button>
 </div></div>
@@ -112,14 +136,15 @@ let busy=false;
 const name=()=>ls('solo_name')||'你';
 const save=()=>{ss('solo_hist',JSON.stringify(hist.slice(-40)));ss('solo_last',Date.now())};
 const nowStr=()=>new Date().toLocaleString('zh-CN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
-const tick=()=>{$('#clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};
+const tick=()=>{const d=new Date(),h=d.getHours();$('#hclock').textContent=d.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false});$('#hdate').textContent=d.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'long'});$('#hgreet').textContent=h<5?'夜深了':h<11?'早上好':h<14?'中午好':h<18?'下午好':'晚上好';$('#clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};
 tick();setInterval(tick,30000);
 function add(role,text){const d=document.createElement('div');d.className='m '+role;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;if(role!=='me')setDlg(text);return d}
-const POSE={shy:'shy',awkward:'shy',shock:'shock',sulk:'angry'};let mt;
+const POSE={shy:'shy',awkward:'shy',shock:'shock',sulk:'angry'};let mt,lis=false;
 function pose(p){document.querySelectorAll('.pose').forEach(i=>i.classList.toggle('on',i.dataset.p===p))}
-function mood(e){clearTimeout(mt);const c=MAP[e]||'calm';actor.className='';void actor.offsetWidth;actor.classList.add(c);pose(POSE[c]||'idle');if(c!=='calm')mt=setTimeout(()=>{actor.className='';pose('idle')},3200)}
-const dt=$('#dt'),setDlg=t=>{dt.textContent=t;$('#dlg').scrollTop=0};
-const menu=o=>document.body.classList.toggle('menu',o);$('#menu').onclick=()=>menu(true);$('#scrim').onclick=()=>menu(false);$('#w-sei').onclick=()=>menu(false);
+function mood(e){clearTimeout(mt);const c=MAP[e]||'calm';actor.className='';void actor.offsetWidth;actor.classList.add(c);pose(POSE[c]||'idle');if(c!=='calm')mt=setTimeout(()=>{actor.className='';pose(lis?'angry':'idle')},3200)}
+const dt=$('#dt'),setDlg=t=>{dt.textContent=t;$('#mline').textContent=t;$('#dlg').scrollTop=0};
+const open=id=>document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));$('#menu').onclick=()=>open('v-home');
+document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b){open(b.dataset.open);if(!b.dataset.open)$('#dot').hidden=true}});
 $('#hist').onclick=()=>{document.body.classList.toggle('hist');log.scrollTop=log.scrollHeight};
 $('#dlg').onclick=()=>{document.body.classList.add('hist');log.scrollTop=log.scrollHeight};
 const split=t=>{const m=t.match(/^\[(.{1,4}?)\]\s*/);return m?[m[1],t.slice(m[0].length)]:[null,t]};
@@ -127,7 +152,8 @@ async function ask(hint){
   const key=ls('solo_key');
   if(!key){panel.classList.add('on');return}
   busy=true;const bub=add('sei','……');
-  const sys=PERSONA.replaceAll('{name}',name())+'\n当前时间：'+nowStr()+(hint?'\n本次情境：'+hint:'');
+  const dayTxt=()=>{const x=day();return x.s||x.n?'\n对方今天的状态：'+(x.s||'')+' '+(x.n||'')+'（自然地关心，不要刻板重复）':''};
+  const sys=PERSONA.replaceAll('{name}',name())+'\n当前时间：'+nowStr()+dayTxt()+(hint?'\n本次情境：'+hint:'');
   let msgs=hist.slice(-30);
   if(!msgs.length||msgs[msgs.length-1].role==='assistant')msgs=msgs.concat({role:'user',content:'（'+name()+'打开了应用）'});
   try{
@@ -135,7 +161,7 @@ async function ask(hint){
     const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||r.status);
     const raw=d.choices[0].message.content.trim(),[e,t]=split(raw);
     if(e)mood(e);
-    bub.textContent=t;setDlg(t);hist.push({role:'assistant',content:raw});save();
+    bub.textContent=t;setDlg(t);if($('#v-home').classList.contains('on'))$('#dot').hidden=false;hist.push({role:'assistant',content:raw});save();
   }catch(err){
     bub.className='m note';
     bub.textContent=(err instanceof TypeError)?'连接失败：可能是网络不通，或浏览器拦截了请求（跨域）。请截图告诉小克。':'出错了：'+err.message;
@@ -143,17 +169,18 @@ async function ask(hint){
   }
   busy=false;log.scrollTop=log.scrollHeight;
 }
-function send(){
+function send(){lastAct=Date.now();
   const t=inp.value.trim();if(!t||busy)return;
   inp.value='';document.body.classList.remove('hist');add('me',t);hist.push({role:'user',content:t});save();ask();
 }
 $('#go').onclick=send;
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&matchMedia('(hover:hover)').matches){e.preventDefault();send()}});
-$('#cfg').onclick=()=>{$('#uname').value=ls('solo_name')||'';$('#ukey').value=ls('solo_key')||'';panel.classList.add('on')};
+const day=()=>{try{const x=JSON.parse(ls('solo_day'));return x&&x.d===new Date().toDateString()?x:{}}catch(e){return{}}};
+const openCfg=$('#cfg').onclick=()=>{const x=day();$('#uday').value=x.s||'';$('#unote').value=x.n||'';$('#uname').value=ls('solo_name')||'';$('#ukey').value=ls('solo_key')||'';panel.classList.add('on')};
 $('#save').onclick=()=>{
   const n=$('#uname').value.trim(),k=$('#ukey').value.trim();
   if(!k){$('#ukey').focus();return}
-  ss('solo_name',n||'你');ss('solo_key',k);panel.classList.remove('on');
+  ss('solo_name',n||'你');ss('solo_day',JSON.stringify({d:new Date().toDateString(),s:$('#uday').value,n:$('#unote').value.trim()}));ss('solo_key',k);panel.classList.remove('on');
   if(!hist.length)start();
 };
 function start(){
@@ -164,6 +191,20 @@ function start(){
 hist.forEach(m=>add(m.role==='user'?'me':'sei',m.role==='user'?m.content:split(m.content)[1]));
 if(!ls('solo_key'))panel.classList.add('on');else start();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+let lastAct=Date.now(),lastPro=0;$('#ic-set').onclick=()=>{open('');openCfg()};
+let memo=[];try{memo=JSON.parse(ls('solo_memo')||'[]')}catch(e){}
+const mr=()=>{$('#ml').innerHTML='';memo.forEach((m,i)=>{const d=document.createElement('div');d.className='nt';d.innerHTML='<p></p><small></small><button>删除</button>';d.children[0].textContent=m.t;d.children[1].textContent=m.at;d.children[2].onclick=()=>{memo.splice(i,1);ss('solo_memo',JSON.stringify(memo));mr()};$('#ml').appendChild(d)})};
+$('#ma').onclick=()=>{const t=$('#mi').value.trim();if(!t)return;memo.unshift({t,at:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});ss('solo_memo',JSON.stringify(memo));$('#mi').value='';mr()};mr();
+const au=$('#au');let mn='',ann='';
+$('#mf').onchange=e=>{const f=e.target.files[0];if(!f)return;au.src=URL.createObjectURL(f);mn=f.name.replace(/\.[^.]+$/,'');$('#mname').textContent='♪ '+mn;au.play().catch(()=>{})};
+au.onplay=()=>{lis=true;pose('angry');if(mn&&ann!==mn){ann=mn;ask('你们正在一起听歌，正在播放《'+mn+'》。用一两句话自然回应，可以轻轻哼歌。')}};
+au.onpause=au.onended=()=>{lis=false;pose('idle')};
+setInterval(()=>{if(lis&&!busy&&!document.hidden)setDlg('（闭着眼睛，轻轻哼着）♪～')},45000);
+setInterval(()=>{if(document.hidden||busy||!ls('solo_key')||!hist.length)return;const n=Date.now();if(n-lastAct>4*6e4&&n-lastPro>15*6e4&&Math.random()<.5){lastPro=n;ask('你想主动找她说一句话（关心她、分享一件季节的小事，或问问她在做什么），不超过两句。')}},6e4);
+const setTheme=t=>{if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme;ss('solo_theme',t)};setTheme(ls('solo_theme')||'');document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+const B=$('#boot'),L=$('#bl');['BOOT SEQUENCE 0.1','CPU ............ OK','MEMORY ......... OK','CLOCK SYNC ..... '+new Date().toLocaleTimeString('zh-CN',{hour12:false}),'LINK: SEI ...... ONLINE'].forEach((t,i)=>setTimeout(()=>{L.textContent+=t+'\n'},300+i*850));
+const endBoot=()=>{B.classList.add('off');setTimeout(()=>B.remove(),600)};setTimeout(endBoot,4800);B.onclick=endBoot;
 </script>
 </body>
 </html>
