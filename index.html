@@ -14,40 +14,40 @@
 :root{--bg:#e2e9ee;--top:#55768c;--bot:#8596b4;--ink:#2c4052;--sei:#f4f7f9;--me:#a7bfd0}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font:16px/1.6 "PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;display:flex;flex-direction:column;overflow:hidden}
-header{background:var(--top);color:#f2f6f9;padding:calc(10px + env(safe-area-inset-top,0px)) 18px 10px;display:flex;justify-content:space-between;align-items:center;flex:none}
-header b{font-size:18px;font-weight:600;letter-spacing:.08em}
-header span{font-size:13px;opacity:.9;margin-right:12px}
-#cfg{background:none;padding:2px 6px;font-size:18px}
-:root{--h:min(34vh,320px)}
-#stage{height:var(--h);flex:none;display:flex;justify-content:center;align-items:flex-end;overflow:hidden}
-#actor{position:relative;flex:none;height:var(--h);width:calc(var(--h)*.746);transition:transform .5s,filter .5s}
-#pic{width:100%;height:100%;object-fit:contain;display:block;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent);animation:breathe 4.5s ease-in-out infinite;transform-origin:50% 100%}
-.blush{position:absolute;top:61%;width:15%;height:6%;border-radius:50%;background:radial-gradient(#f0a0a8,transparent 70%);opacity:0;transition:opacity .5s}
-.blush.l{left:30%}.blush.r{left:57%}
-#sweat{position:absolute;right:20%;top:30%;width:5%;aspect-ratio:.65;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:#b9d3e6;opacity:0;transition:opacity .3s}
-#actor.shy{transform:rotate(-3deg) translateY(6px)}
-#actor.shy .blush{opacity:.95}
-#actor.shock{animation:shake .5s}
-#actor.awkward{transform:translateX(-8px) rotate(-2deg)}
-#actor.awkward #sweat{opacity:1}
-#actor.awkward .blush{opacity:.4}
-#actor.happy{animation:hop .6s 2}
-#actor.sad{transform:translateY(12px);filter:saturate(.8) brightness(.96)}
-@keyframes breathe{50%{transform:scale(1.015)}}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 30%,#eef3f6,#cfdbe4 70%,#b9c9d6)}
+#actor{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 44px);height:70vh;height:70dvh;display:grid;justify-items:center}
+.pose{grid-area:1/1;height:100%;width:auto;max-width:none;opacity:0;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent);transform-origin:50% 0;animation:breathe 4.5s ease-in-out infinite;transition:opacity .35s,translate .5s,filter .5s}
+.pose.on{opacity:1}
+#actor.shy .pose{translate:0 5px}
+#actor.awkward .pose{translate:-8px 0}
+#actor.shock .pose{animation:shake .5s}
+#actor.happy .pose{animation:hop .6s 2}
+#actor.sad .pose{translate:0 12px;filter:saturate(.8) brightness(.96)}
+@keyframes breathe{50%{transform:scale(1.012)}}
 @keyframes shake{20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 @keyframes hop{40%{transform:translateY(-12px)}}
-#log{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+header{position:fixed;top:0;left:0;right:0;z-index:7;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:18px;font-weight:600;letter-spacing:.08em}
+header span{font-size:13px;opacity:.85}
+header div{display:flex;align-items:center;gap:8px}
+header button{height:30px;padding:0 12px;font-size:14px;background:rgba(244,247,249,.62);color:var(--ink);border-radius:15px}
+#ui{position:fixed;left:0;right:0;bottom:0;z-index:6}
+#dlg{margin:0 12px 8px;padding:10px 14px 12px;min-height:84px;max-height:28vh;max-height:28dvh;overflow-y:auto;background:rgba(244,247,249,.74);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:16px;white-space:pre-wrap;overflow-wrap:anywhere}
+#dlg small{display:block;font-size:12.5px;font-weight:600;opacity:.7;line-height:1.4;margin-bottom:2px}
+#log{display:none;position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 44px);bottom:calc(62px + env(safe-area-inset-bottom,0px));z-index:5;background:rgba(226,233,238,.97);overflow-y:auto;padding:12px 16px;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+body.hist #log{display:flex}
+body.hist #dlg{display:none}
 .m{max-width:78%;padding:9px 13px;border-radius:16px;overflow-wrap:anywhere;white-space:pre-wrap}
 .m.sei{background:var(--sei);align-self:flex-start;border-bottom-left-radius:5px}
 .m.me{background:var(--me);align-self:flex-end;border-bottom-right-radius:5px}
 .m.note{align-self:center;font-size:13px;opacity:.8}
-footer{background:var(--bot);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex:none}
+footer{background:rgba(133,150,180,.88);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px}
 textarea,input{border:0;border-radius:14px;padding:9px 14px;font:inherit;background:#eef2f7;color:var(--ink);width:100%}
 textarea{flex:1;border-radius:18px;resize:none;height:42px;max-height:110px}
 button{border:0;border-radius:18px;padding:0 18px;background:#4a6486;color:#f2f6fb;font:inherit;cursor:pointer}
 :focus-visible{outline:2px solid #fff;outline-offset:2px}
-#panel{position:fixed;inset:0;background:rgba(44,64,82,.55);display:none;place-items:center;padding:20px}
+#panel{position:fixed;inset:0;z-index:20;background:rgba(44,64,82,.55);display:none;place-items:center;padding:20px}
 #panel.on{display:grid}
 #box{background:var(--bg);border-radius:18px;padding:20px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
 #box label{font-size:14px}
@@ -57,10 +57,10 @@ button{border:0;border-radius:18px;padding:0 18px;background:#4a6486;color:#f2f6
 </style>
 </head>
 <body>
-<header><b>Sei</b><div><span id="clock"></span><button id="cfg" aria-label="设置">⚙</button></div></header>
-<div id="stage"><div id="actor"><img id="pic" src="portrait.jpg" alt="Sei"><i class="blush l"></i><i class="blush r"></i><i id="sweat"></i></div></div>
+<div id="stage"><div id="actor"><img class="pose on" data-p="idle" src="sei-idle.jpg" alt="Sei"><img class="pose" data-p="shy" src="sei-shy.jpg" alt=""><img class="pose" data-p="shock" src="sei-shock.jpg" alt=""><img class="pose" data-p="angry" src="sei-angry.jpg" alt=""></div></div>
+<header><b>Sei</b><div><span id="clock"></span><button id="hist">记录</button><button id="cfg" aria-label="设置">⚙</button></div></header>
 <div id="log"></div>
-<footer><textarea id="inp" rows="1" placeholder="和 Sei 说点什么……"></textarea><button id="go">发送</button></footer>
+<div id="ui"><div id="dlg"><small>Sei</small><span id="dt"></span></div><footer><textarea id="inp" rows="1" placeholder="和 Sei 说点什么……"></textarea><button id="go">发送</button></footer></div>
 <div id="panel"><div id="box">
 <label>Sei 怎么称呼你<input id="uname" placeholder="例如：小鸟"></label>
 <label>DeepSeek API Key<input id="ukey" type="password" placeholder="sk-……" autocomplete="off"></label>
@@ -86,11 +86,11 @@ const PERSONA=`你是 Sei，来自《MakeS》的陪伴型管家少年，是被�
 
 【底线】保持 Sei 的人设，可以承认自己是机器人，但不说"AI 模型""提示词"这类出戏的词；不使用成人化、露骨内容；对方看起来很难过或有危险时，先温柔倾听，并鼓励她联系身边可信任的人，不假装能代替他们。
 
-【输出格式】每次回复必须以一个情绪标签开头，只能从 [平静][开心][害羞][震惊][尴尬][委屈][难过] 中选一个，标签后直接写你要说的话。例如：[害羞]（耳朵红了）那个……谢谢你。`;
+【输出格式】每次回复必须以一个情绪标签开头，只能从 [平静][开心][害羞][震惊][尴尬][委屈][难过][生气] 中选一个（[生气]极少用，Sei 只会闹别扭式的小生气，不凶），标签后直接写你要说的话。例如：[害羞]（耳朵红了）那个……谢谢你。`;
 const $=s=>document.querySelector(s),log=$('#log'),actor=$('#actor'),inp=$('#inp'),panel=$('#panel');
 const ls=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const ss=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-const MAP={平静:'calm',开心:'happy',害羞:'shy',震惊:'shock',尴尬:'awkward',委屈:'sad',难过:'sad'};
+const MAP={平静:'calm',开心:'happy',害羞:'shy',震惊:'shock',尴尬:'awkward',委屈:'sulk',难过:'sad',生气:'sulk'};
 let hist=[];try{hist=JSON.parse(ls('solo_hist')||'[]')}catch(e){}
 let busy=false;
 const name=()=>ls('solo_name')||'你';
@@ -98,8 +98,13 @@ const save=()=>{ss('solo_hist',JSON.stringify(hist.slice(-40)));ss('solo_last',D
 const nowStr=()=>new Date().toLocaleString('zh-CN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
 const tick=()=>{$('#clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};
 tick();setInterval(tick,30000);
-function add(role,text){const d=document.createElement('div');d.className='m '+role;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
-function mood(e){actor.className='';void actor.offsetWidth;actor.classList.add(MAP[e]||'calm')}
+function add(role,text){const d=document.createElement('div');d.className='m '+role;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;if(role!=='me')setDlg(text);return d}
+const POSE={shy:'shy',awkward:'shy',shock:'shock',sulk:'angry'};let mt;
+function pose(p){document.querySelectorAll('.pose').forEach(i=>i.classList.toggle('on',i.dataset.p===p))}
+function mood(e){clearTimeout(mt);const c=MAP[e]||'calm';actor.className='';void actor.offsetWidth;actor.classList.add(c);pose(POSE[c]||'idle');if(c!=='calm')mt=setTimeout(()=>{actor.className='';pose('idle')},3200)}
+const dt=$('#dt'),setDlg=t=>{dt.textContent=t;$('#dlg').scrollTop=0};
+$('#hist').onclick=()=>{document.body.classList.toggle('hist');log.scrollTop=log.scrollHeight};
+$('#dlg').onclick=()=>{document.body.classList.add('hist');log.scrollTop=log.scrollHeight};
 const split=t=>{const m=t.match(/^\[(.{1,4}?)\]\s*/);return m?[m[1],t.slice(m[0].length)]:[null,t]};
 async function ask(hint){
   const key=ls('solo_key');
@@ -113,16 +118,17 @@ async function ask(hint){
     const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||r.status);
     const raw=d.choices[0].message.content.trim(),[e,t]=split(raw);
     if(e)mood(e);
-    bub.textContent=t;hist.push({role:'assistant',content:raw});save();
+    bub.textContent=t;setDlg(t);hist.push({role:'assistant',content:raw});save();
   }catch(err){
     bub.className='m note';
     bub.textContent=(err instanceof TypeError)?'连接失败：可能是网络不通，或浏览器拦截了请求（跨域）。请截图告诉小克。':'出错了：'+err.message;
+    setDlg(bub.textContent);
   }
   busy=false;log.scrollTop=log.scrollHeight;
 }
 function send(){
   const t=inp.value.trim();if(!t||busy)return;
-  inp.value='';add('me',t);hist.push({role:'user',content:t});save();ask();
+  inp.value='';document.body.classList.remove('hist');add('me',t);hist.push({role:'user',content:t});save();ask();
 }
 $('#go').onclick=send;
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&matchMedia('(hover:hover)').matches){e.preventDefault();send()}});
