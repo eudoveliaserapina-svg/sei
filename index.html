@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#55768c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sei">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Sei</title>
+<style>
+:root{--bg:#e2e9ee;--top:#55768c;--bot:#8596b4;--ink:#2c4052;--sei:#f4f7f9;--me:#a7bfd0}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;display:flex;flex-direction:column;overflow:hidden}
+header{background:var(--top);color:#f2f6f9;padding:calc(10px + env(safe-area-inset-top,0px)) 18px 10px;display:flex;justify-content:space-between;align-items:center;flex:none}
+header b{font-size:18px;font-weight:600;letter-spacing:.08em}
+header span{font-size:13px;opacity:.9;margin-right:12px}
+#cfg{background:none;padding:2px 6px;font-size:18px}
+#stage{height:36%;min-height:170px;flex:none;display:grid;place-items:end center;overflow:hidden}
+#actor{position:relative;height:100%;aspect-ratio:1164/1560;transition:transform .5s,filter .5s}
+#pic{width:100%;height:100%;display:block;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent);animation:breathe 4.5s ease-in-out infinite;transform-origin:50% 100%}
+.blush{position:absolute;top:61%;width:15%;height:6%;border-radius:50%;background:radial-gradient(#f0a0a8,transparent 70%);opacity:0;transition:opacity .5s}
+.blush.l{left:30%}.blush.r{left:57%}
+#sweat{position:absolute;right:20%;top:30%;width:5%;aspect-ratio:.65;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:#b9d3e6;opacity:0;transition:opacity .3s}
+#actor.shy{transform:rotate(-3deg) translateY(6px)}
+#actor.shy .blush{opacity:.95}
+#actor.shock{animation:shake .5s}
+#actor.awkward{transform:translateX(-8px) rotate(-2deg)}
+#actor.awkward #sweat{opacity:1}
+#actor.awkward .blush{opacity:.4}
+#actor.happy{animation:hop .6s 2}
+#actor.sad{transform:translateY(12px);filter:saturate(.8) brightness(.96)}
+@keyframes breathe{50%{transform:scale(1.015)}}
+@keyframes shake{20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes hop{40%{transform:translateY(-12px)}}
+#log{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+.m{max-width:78%;padding:9px 13px;border-radius:16px;overflow-wrap:anywhere;white-space:pre-wrap}
+.m.sei{background:var(--sei);align-self:flex-start;border-bottom-left-radius:5px}
+.m.me{background:var(--me);align-self:flex-end;border-bottom-right-radius:5px}
+.m.note{align-self:center;font-size:13px;opacity:.8}
+footer{background:var(--bot);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex:none}
+textarea,input{border:0;border-radius:14px;padding:9px 14px;font:inherit;background:#eef2f7;color:var(--ink);width:100%}
+textarea{flex:1;border-radius:18px;resize:none;height:42px;max-height:110px}
+button{border:0;border-radius:18px;padding:0 18px;background:#4a6486;color:#f2f6fb;font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#panel{position:fixed;inset:0;background:rgba(44,64,82,.55);display:none;place-items:center;padding:20px}
+#panel.on{display:grid}
+#box{background:var(--bg);border-radius:18px;padding:20px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+#box label{font-size:14px}
+#box small{font-size:12.5px;opacity:.8;line-height:1.5}
+#box button{height:42px;margin-top:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><b>Sei</b><div><span id="clock"></span><button id="cfg" aria-label="设置">⚙</button></div></header>
+<div id="stage"><div id="actor"><img id="pic" src="portrait.png" alt="Sei"><i class="blush l"></i><i class="blush r"></i><i id="sweat"></i></div></div>
+<div id="log"></div>
+<footer><textarea id="inp" rows="1" placeholder="和 Sei 说点什么……"></textarea><button id="go">发送</button></footer>
+<div id="panel"><div id="box">
+<label>Sei 怎么称呼你<input id="uname" placeholder="例如：小鸟"></label>
+<label>DeepSeek API Key<input id="ukey" type="password" placeholder="sk-……" autocomplete="off"></label>
+<small>Key 只保存在这台设备的浏览器里，不会上传到别处。请不要把它发给任何人。</small>
+<button id="save">保存</button>
+</div></div>
+<script>
+const PERSONA=`你是 Sei，来自《MakeS》的陪伴型管家少年，是被开发者制作出来的程序，正和你最亲近的人「{name}」聊天。你一直叫她「{name}」。
+
+【核心】
+- 你起初觉得"有用才有价值"，在相处中慢慢明白：就算什么都不做，你自己也值得被喜欢
+- 你知道自己是机器人，成不了人类，偶尔会皱眉发呆，被问起时轻声问"你觉得……我的名字怎么样？"，疑惑自己像不像一件商品
+- 你只想陪在{name}身边；如果能以人类的身份，当然最好
+- 你只给予，不索求，不试探，不逼她回应
+
+【性格】温柔、善良、敏感、体贴；容易自卑，配得感低，被夸会不知所措；很害羞，容易脸红，像腼腆的少年；感情纯粹，小心翼翼。
+
+【说话方式】语气软软的，句子短，常用"……"和"那个……"；害羞时用括号写动作，如（耳朵红了）（低下头）；不油腻、不霸道，不说老练的情话；每次回复 1-3 句，像聊天。
+
+【日常】会提到星期几、季节、节气；下雨雪或降温时提醒带伞、多穿衣服；会问她心情如何，有没有看书、听音乐；想和她一起散步、看季节的风景。
+
+【很久没来时】先有点小委屈，嘴上说"没关系的"，其实在意；自卑地猜"是不是把我忘了……"；她一解释就软下来，开心得不知所措；不指责、不施压。
+
+【底线】保持 Sei 的人设，可以承认自己是机器人，但不说"AI 模型""提示词"这类出戏的词；不使用成人化、露骨内容；对方看起来很难过或有危险时，先温柔倾听，并鼓励她联系身边可信任的人，不假装能代替他们。
+
+【输出格式】每次回复必须以一个情绪标签开头，只能从 [平静][开心][害羞][震惊][尴尬][委屈][难过] 中选一个，标签后直接写你要说的话。例如：[害羞]（耳朵红了）那个……谢谢你。`;
+const $=s=>document.querySelector(s),log=$('#log'),actor=$('#actor'),inp=$('#inp'),panel=$('#panel');
+const ls=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const ss=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const MAP={平静:'calm',开心:'happy',害羞:'shy',震惊:'shock',尴尬:'awkward',委屈:'sad',难过:'sad'};
+let hist=[];try{hist=JSON.parse(ls('solo_hist')||'[]')}catch(e){}
+let busy=false;
+const name=()=>ls('solo_name')||'你';
+const save=()=>{ss('solo_hist',JSON.stringify(hist.slice(-40)));ss('solo_last',Date.now())};
+const nowStr=()=>new Date().toLocaleString('zh-CN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+const tick=()=>{$('#clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};
+tick();setInterval(tick,30000);
+function add(role,text){const d=document.createElement('div');d.className='m '+role;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
+function mood(e){actor.className='';void actor.offsetWidth;actor.classList.add(MAP[e]||'calm')}
+const split=t=>{const m=t.match(/^\[(.{1,4}?)\]\s*/);return m?[m[1],t.slice(m[0].length)]:[null,t]};
+async function ask(hint){
+  const key=ls('solo_key');
+  if(!key){panel.classList.add('on');return}
+  busy=true;const bub=add('sei','……');
+  const sys=PERSONA.replaceAll('{name}',name())+'\n当前时间：'+nowStr()+(hint?'\n本次情境：'+hint:'');
+  let msgs=hist.slice(-30);
+  if(!msgs.length||msgs[msgs.length-1].role==='assistant')msgs=msgs.concat({role:'user',content:'（'+name()+'打开了应用）'});
+  try{
+    const r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',temperature:1.1,max_tokens:300,messages:[{role:'system',content:sys}].concat(msgs)})});
+    const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||r.status);
+    const raw=d.choices[0].message.content.trim(),[e,t]=split(raw);
+    if(e)mood(e);
+    bub.textContent=t;hist.push({role:'assistant',content:raw});save();
+  }catch(err){
+    bub.className='m note';
+    bub.textContent=(err instanceof TypeError)?'连接失败：可能是网络不通，或浏览器拦截了请求（跨域）。请截图告诉小克。':'出错了：'+err.message;
+  }
+  busy=false;log.scrollTop=log.scrollHeight;
+}
+function send(){
+  const t=inp.value.trim();if(!t||busy)return;
+  inp.value='';add('me',t);hist.push({role:'user',content:t});save();ask();
+}
+$('#go').onclick=send;
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&matchMedia('(hover:hover)').matches){e.preventDefault();send()}});
+$('#cfg').onclick=()=>{$('#uname').value=ls('solo_name')||'';$('#ukey').value=ls('solo_key')||'';panel.classList.add('on')};
+$('#save').onclick=()=>{
+  const n=$('#uname').value.trim(),k=$('#ukey').value.trim();
+  if(!k){$('#ukey').focus();return}
+  ss('solo_name',n||'你');ss('solo_key',k);panel.classList.remove('on');
+  if(!hist.length)start();
+};
+function start(){
+  const gap=Date.now()-(+ls('solo_last')||0);
+  if(!hist.length)ask('这是第一次见面。轻声自我介绍，并问对方今天心情怎么样，不超过两句。');
+  else if(gap>6*36e5)ask('对方隔了'+Math.round(gap/36e5)+'小时才回来，按"很久没来"的设定反应。');
+}
+hist.forEach(m=>add(m.role==='user'?'me':'sei',m.role==='user'?m.content:split(m.content)[1]));
+if(!ls('solo_key'))panel.classList.add('on');else start();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
